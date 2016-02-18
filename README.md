@@ -2,8 +2,6 @@
 
 This is what we'll be using for hosting code from the 2016 regional season.
 
----
-
 ## IDE Quickstart
 
 Click [this](http://homebase.kipr.org/2014/mod/resource/view.php?id=885) for KIPR's workshop slides that has information on the new controller/IDE.
@@ -20,3 +18,8 @@ Click [this](http://homebase.kipr.org/2014/mod/resource/view.php?id=885) for KIP
 > For step 2, you could also use the ethernet connection created by the
 > controller, but I haven't had success with that method. Another downside to
 > connecting to the controller's network is that you cannot access the internet.
+
+## Libraries
+
+Go [here](https://github.com/justinvyu/botball) for our libraries. Check back often
+because they will be modified/optimized throughout the season.
