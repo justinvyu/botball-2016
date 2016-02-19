@@ -2,6 +2,15 @@
 
 This is what we'll be using for hosting code from the 2016 regional season.
 
+# IMPORTANT CONTROLLER SHUTDOWN!
+
+> THE BATTERY WILL BE DESTROYED IF YOU DON'T DO THIS EVERY TIME! I KNOW BECAUSE I BROKE ONE...
+
+1. Click the `Shut Down` button on the controller.
+2. Wait until the terminal outputs `system halted` or something like that.
+3. Switch the controller to off using a toothpick/pointy object.
+4. Disconnect the battery (optional).
+
 ## IDE Quickstart
 
 Click [this](http://homebase.kipr.org/2014/mod/resource/view.php?id=885) for KIPR's workshop slides that has information on the new controller/IDE.
