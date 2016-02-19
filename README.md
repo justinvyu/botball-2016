@@ -23,3 +23,16 @@ Click [this](http://homebase.kipr.org/2014/mod/resource/view.php?id=885) for KIP
 
 Go [here](https://github.com/justinvyu/botball) for our libraries. Check back often
 because they will be modified/optimized throughout the season.
+
+## Official KIPR "Docs"
+
+Look at their [official Github repository](https://github.com/kipr/libwallaby) for all the source code.
+
+> Learn how to read these!
+
+- [Create Commands](https://github.com/kipr/libwallaby/blob/master/src/create_c.cpp)
+- [Motor Commands](https://github.com/kipr/libwallaby/blob/master/src/motors_c.cpp)
+- [DIGITAL Sensor Commands](https://github.com/kipr/libwallaby/blob/master/src/digital_c.cpp)
+- [ANALOG Sensor Commands](https://github.com/kipr/libwallaby/blob/master/src/analog_c.cpp)
+- [Camera Commands](https://github.com/kipr/libwallaby/blob/master/src/camera_c.cpp)
+- [Servo Commands](https://github.com/kipr/libwallaby/blob/master/src/servo_c.cpp)
