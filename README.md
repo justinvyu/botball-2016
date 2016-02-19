@@ -4,8 +4,8 @@ This is what we'll be using for hosting code from the 2016 regional season.
 
 This year's Botball game is described [here](http://homebase.kipr.org/2014/mod/resource/view.php?id=888).
 
-<img src="https://raw.githubusercontent.com/justinvyu/botball-2016/master/images/field.png" alt="Game Field" style="width: 150px; text-align: center;"/>
-<img src="https://raw.githubusercontent.com/justinvyu/botball-2016/master/images/scoring.png" alt="Scoring Table" style="width: 150px; text-align: center;"/>
+<img src="https://raw.githubusercontent.com/justinvyu/botball-2016/master/images/field.png" alt="Game Field" style="width: 150px; max-width: 150px; text-align: center;"/>
+<img src="https://raw.githubusercontent.com/justinvyu/botball-2016/master/images/scoring.png" alt="Scoring Table" style="max-width: 150px; width: 150px; text-align: center;"/>
 
 # IMPORTANT CONTROLLER SHUTDOWN!
 
