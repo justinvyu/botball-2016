@@ -2,6 +2,11 @@
 
 This is what we'll be using for hosting code from the 2016 regional season.
 
+This year's Botball game is described [here](http://homebase.kipr.org/2014/mod/resource/view.php?id=888).
+
+![Game Field](../images/field.png)
+![Scoring Table](../images/scoring.png)
+
 # IMPORTANT CONTROLLER SHUTDOWN!
 
 > THE BATTERY WILL BE DESTROYED IF YOU DON'T DO THIS EVERY TIME! I KNOW BECAUSE I BROKE ONE...
