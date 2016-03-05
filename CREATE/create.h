@@ -1,30 +1,66 @@
 //
-//  create.h
+//  Create.h
 //  Source written by Justin Yu
 //
 
 #include <kipr/botball.h>
 
-#ifndef _CREATE_H_
-#define _CREATE_H_
+typedef struct Create {
+    // movement
+    void (*forward)(float dist, int speed);
+    void (*backward)(float dist, int speed);
+    void (*left)(int angle, float radius, int speed);
+    void (*right)(int angle, float radius, int speed);
 
-void create_write_int(int value);
+    void (*drive_direct)(int l_speed, int r_speed);
+    void (*stop)();
 
-float CTICKtoCM(long tick);
-long CMtoCTICK(float cm);
+    // sensors
+    int (*get_distance)();
+    void (*set_distance)(int dist);
 
-void clear_create_distance();
-void clear_create_angle();
+    int (*get_total_angle)();
+    void (*set_total_angle)(int angle);
 
-void create_left(int angle, float radius, int speed);
-void create_right(int angle, float radius, int speed);
-void create_forward(float dist, int speed);
-void create_backward(float dist, int speed);
+    int (*get_lbump)();
+    int (*get_rbump)();
 
-void create_forward_until_bump(int speed);
+    // OI
+    void (*write_byte)(char byte);
+    void (*write_int)(int decimal);
 
-void create_send();
-void create_receive();
-void create_block();
+    // misc
+    int (*get_battery_charge)();
+    void (*full)();
+    int (*connect)();
+    void (*disconnect)();
+} Create;
 
-#endif
+extern Create new_create(); // constructor
+
+/*
+extern const struct CreateClass {
+    // Constructor
+    struct Create (*new)();
+
+    // Class Methods
+    void (*write_int)(int decimal);
+} Create;
+*/
+
+/*
+struct Create {
+    void (*forward)(float dist, int speed);
+    void (*backward)(float dist, int speed);
+    void (*left)(int angle, float radius, int speed);
+    void (*right)(int angle, float radius, int speed);
+};
+
+extern const struct CreateClass {
+    // Constructor
+    struct Create (*new)();
+
+    // Class Methods
+    void (*write_int)(int decimal);
+} Create;
+*/
