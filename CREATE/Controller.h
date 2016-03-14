@@ -5,9 +5,8 @@
 
 #include <kipr/botball.h>
 
-#define PI 3.14159265358979
-
 typedef struct Controller {
+    // instance variables
     int motor_left, motor_right;
     float distance_between_wheels;
     float wheel_diameter;
@@ -41,7 +40,7 @@ typedef struct Controller {
     void (*enable_servos)();
     void (*disable_servos)();
     int (*get_servo_position)(int port);
-    void (*set_servo_position)(int port, int position);
+    void (*servo)(int port, int position);
     void (*slow_servo)(int port, int position, float time);
 
     // digital sensors
@@ -60,4 +59,4 @@ extern Controller new_controller(int motor_left, int motor_right,
                            int distance_between_wheels, int wheel_diameter);
 extern Controller new_create_controller(); // alternate constructor
 
-Controller *controller; // global wallaby instance
+Controller controller; // global wallaby instance

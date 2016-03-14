@@ -22,47 +22,41 @@ static void right(int angle, float radius, int speed);
 
 static void create_write_int(int decimal) {
   	// [high byte][low byte]
-    create_write_byte(get_high_byte(decimal));
-    create_write_byte(get_low_byte(decimal));
+    create.write_byte(get_high_byte(decimal));
+    create.write_byte(get_low_byte(decimal));
 }
 
 static void forward(float dist, int speed) {
     if(speed < -500 || speed > 500)
         return;
     if(dist < 0.) {
-        backward(-dist, speed);
+        create.backward(-dist, speed);
         return;
     }
 
-    set_create_distance(0);
-    long ticks = dist * CTICK_PER_CM;
-    create_drive_direct(speed, speed);
+    // t = d / r
+    float travel_time = (dist * 10) / (float)speed; // speed is in mm/sec
+    create.drive_direct(speed, speed);
+    msleep(travel_time * 1000.); // convert to milliseconds
 
-    do {
-        msleep(40);
-    } while(get_create_distance() < ticks);
-
-    create_stop();
+    create.block();
 }
 
 static void backward(float dist, int speed) {
+    // Make sure parameters are valid
     if(speed < -500 || speed > 500)
         return;
     if(dist < 0.) {
-        forward(-dist, speed);
+        create.forward(-dist, speed);
         return;
     }
 
-	set_create_distance(0);
-    long ticks = -dist * CTICK_PER_CM;
+    // t = d / r
+    float travel_time = (dist * 10) / (float)speed; // speed is in mm/sec
+    create.drive_direct(-speed, -speed);
+    msleep(travel_time * 1000.); // convert to milliseconds
 
-    create_drive_direct(-speed, -speed);
-
-    do {
-        msleep(40);
-    } while(get_create_distance() > ticks);
-
-    create_stop();
+    create.block();
 }
 
 static void left(int angle, float radius, int speed) {
@@ -71,27 +65,30 @@ static void left(int angle, float radius, int speed) {
     if (speed < -500 || speed > 500)
         return;
     if(angle < 0.) {
-        right(-angle, radius, speed);
+        create.right(-angle, radius, speed);
         return;
     }
 
     long radiusTicks = radius * CTICK_PER_CM;
-    set_create_total_angle(0);
+    create.set_total_angle(0);
 
   	// create turn byte (decimal): 137
   	// [137][speed high][speed low][radius high][radius low]
-    create_write_byte(137);
-    create_write_int(speed);
-    if(radius == 0)
-        create_write_int(1);
-    else
-        create_write_int(radiusTicks);
 
-    do {
-        msleep(40);
-    } while(get_create_total_angle() <= angle);
+    if(radius == 0) {
+        create_spin_CCW(speed);
+    } else {
+        create.write_byte(137);
+        create.write_int(speed);
+        create.write_int(radiusTicks);
+    }
 
-    create_stop();
+    while(create.get_total_angle() < angle) {
+        msleep(25);
+        printf("%d\n", create.get_total_angle());
+    }
+
+    create.block();
 }
 
 static void right(int angle, float radius, int speed) {
@@ -100,32 +97,49 @@ static void right(int angle, float radius, int speed) {
     if (speed < -500 || speed > 500)
         return;
     if(angle < 0.) {
-        left(-angle, radius, speed);
+        create.left(-angle, radius, speed);
         return;
     }
 
     long radiusTicks = radius * CTICK_PER_CM;
-    set_create_total_angle(0);
-
-    // create turn byte (decimal): 137
-    // [137][speed high][speed low][radius high][radius low]
-    create_write_byte(137);
-    create_write_int(speed);
+    create.set_total_angle(0);
 
     if(radius == 0)
-        create_write_int(-1);
-    else
-        create_write_int(-radiusTicks);
+        create_spin_CW(speed);
+    else {
+        // create turn byte (decimal): 137
+        // [137][speed high][speed low][radius high][radius low]
+        create.write_byte(137);
+        create.write_int(speed);
+        create.write_int(-radiusTicks);
+    }
 
     do {
-        msleep(40);
-    } while(get_create_total_angle() > -angle);
+        msleep(5);
+    } while(create.get_total_angle() >= -angle);
 
-    create_stop();
+    create.block();
+}
+
+static void send() {
+    create.write_byte(142); // Sensor input
+    create.write_byte(35);	// 35 : OI Mode
+}
+
+static void receive() {
+    char buffer[1];
+    char *bptr = buffer;
+    create_read_block(bptr, 1);
+}
+
+static void block() {
+    create.stop();
+    create.send();
+    create.receive();
 }
 
 Create new_create() {
-	Create instance = {
+    Create instance = {
         // Assign method references
         .forward = &forward,
         .backward = &backward,
@@ -141,26 +155,14 @@ Create new_create() {
         .get_rbump = &get_create_rbump,
         .write_byte = &create_write_byte,
         .write_int = &create_write_int,
+        .block = &block,
+        .send = &send,
+        .receive = &receive,
         .get_battery_charge = &get_create_battery_charge,
         .full = &create_full,
         .connect = &create_connect,
         .disconnect = &create_disconnect
     };
+    create = instance;
     return instance;
 }
-
-/*
-static struct Create new() {
-	return (struct Create) {
-        .forward = &forward,
-        .backward = &backward,
-        .left = &left,
-        .right = &right
-    };
-}
-
-const struct CreateClass Create = {
-    .new = &new,
-    .write_int = &create_write_int
-};
-*/

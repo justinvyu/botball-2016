@@ -1,9 +1,6 @@
 #include <kipr/botball.h>
 
-// #include "Create.h"
 #include "Scorpion.h"
-#include "create.h"
-#include "generic.h"
 
 int main()
 {
@@ -11,75 +8,73 @@ int main()
 
     scorpion.create.connect();
 
-    scorpion.wallaby.enable_servos();
-    scorpion.wallaby.set_servo_position(BACK_SERVO, BACK_UP);
-    scorpion.wallaby.set_servo_position(ARM_SERVO, ARM_UP);
-    msleep(2000);
+    scorpion.controller.enable_servos();
+    scorpion.controller.servo(BACK_SERVO, BACK_UP);
+    scorpion.raise_arm();
 
-    scorpion.create.forward(4.5, 150);
-    scorpion.create.left(89, 0, 150);
+    // scorpion.create.forward(4.5, 150);
+    // scorpion.create.left(90, 0, 150);
 
-    scorpion.wallaby.set_servo_position(CLAW_SERVO, CLAW_PARTIAL);
-    scorpion.wallaby.set_servo_position(ARM_SERVO, ARM_DOWN - 400);
+    scorpion.controller.servo(CLAW_SERVO, CLAW_PARTIAL);
+    scorpion.controller.servo(ARM_SERVO, ARM_DOWN - 400);
     msleep(500);
-    scorpion.create.forward(98, 250);
-    scorpion.open_claw();
 
-    scorpion.wallaby.set_servo_position(ARM_SERVO, ARM_DOWN);
-    msleep(200);
-    scorpion.wallaby.slow_servo(CLAW_SERVO, CLAW_PARTIAL, 1.2);
-    msleep(200);
+    scorpion.create.forward(120, 250);
+    scorpion.create.left(2, 0, 100);
+
+    scorpion.open_claw();
+    scorpion.lower_arm();
+
+    scorpion.create.forward(2, 100);
 
     // Get the first tribble pile
 
-    scorpion.create.forward(2, 50);
-    //scorpion.create.right(2, 0, 50);
-    scorpion.create.forward(8, 50);
-    scorpion.wallaby.slow_servo(CLAW_SERVO, CLAW_CLOSED, 1.2);
-    msleep(200);
+    scorpion.grab_tribbles();
+    scorpion.set_arm_to_position(ARM_PARTIAL);
 
-    scorpion.wallaby.set_servo_position(ARM_SERVO, ARM_UP);
-    msleep(400);
-
-    scorpion.create.right(195, 0, 150);
-    scorpion.wallaby.set_servo_position(BACK_SERVO, BACK_DOWN);
+    scorpion.create.right(221, 0, 150);
+    scorpion.controller.servo(BACK_SERVO, BACK_DOWN);
     msleep(500);
-    scorpion.create.backward(34, 100);
-	scorpion.create.left(36, 0, 100);
-    scorpion.create.backward(23, 100);
-    scorpion.create.right(10, 0, 100);
+
+    scorpion.create.backward(30, 100);
+	scorpion.create.left(23, 0, 100);
+    scorpion.create.backward(26, 100); // going back, getting the box
+    scorpion.create.right(6, 0, 100);
+    scorpion.create.backward(4, 150);
+
+    scorpion.controller.slow_servo(BACK_SERVO, BACK_UP, 1.5);
+    scorpion.create.forward(3, 100);
+
+    scorpion.raise_arm();
+    scorpion.open_claw();
+    scorpion.shake();
+
+    // Get second tribble pile
+
+    scorpion.create.left(16, 0, 100);
+    scorpion.create.forward(36, 100);
+    scorpion.lower_arm();
+    scorpion.grab_tribbles();
+
     scorpion.create.backward(5, 150);
 
-    scorpion.wallaby.set_servo_position(BACK_SERVO, BACK_UP);
-    msleep(2000);
-    scorpion.create.forward(3, 100);
-    //create_backward(5, 100);
+    scorpion.raise_arm();
+    scorpion.open_claw();
+    scorpion.shake();
 
-    scorpion.wallaby.set_servo_position(ARM_SERVO, ARM_DOWN);
-    msleep(500);
-    scorpion.wallaby.set_servo_position(ARM_SERVO, ARM_UP);
-    msleep(500);
-    scorpion.wallaby.set_servo_position(CLAW_SERVO, CLAW_OPEN);
-    msleep(2000);
+    // Get third tribble pile
 
-    scorpion.shake_arm();
-
-    scorpion.create.left(10, 0, 100);
-    scorpion.create.forward(35, 100);
+    scorpion.create.left(135, 0, 150);
     scorpion.lower_arm();
-    scorpion.set_claw_to_position(CLAW_PARTIAL);
-    scorpion.create.forward(5, 100);
-    scorpion.close_claw_slow(1.2);
+    scorpion.create.backward(10, 200);
+    scorpion.grab_tribbles();
 
-    scorpion.create.backward(10, 150);
-    scorpion.wallaby.set_servo_position(ARM_SERVO, ARM_DOWN);
-    msleep(500);
-    scorpion.wallaby.set_servo_position(ARM_SERVO, ARM_UP);
-    msleep(500);
-    scorpion.wallaby.set_servo_position(CLAW_SERVO, CLAW_OPEN);
-    msleep(2000);
+    scorpion.create.backward(20, 200);
+    scorpion.raise_arm();
+    scorpion.open_claw();
+    scorpion.shake();
 
-    scorpion.shake_arm();
+    scorpion.controller.slow_servo(BACK_SERVO, BACK_DOWN, 1.5);
 
   	return 0;
 }
