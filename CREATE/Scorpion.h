@@ -13,20 +13,20 @@ enum ServoPositions {
     CLAW_SERVO = 1,
     BACK_SERVO = 2,
 
-    ARM_UP = 250,
+    ARM_UP = 100,
     ARM_PARTIAL = 1000,
     ARM_DOWN = 2198,
 
     CLAW_OPEN = 1950,
     CLAW_PARTIAL = 1250,
-    CLAW_CLOSED = 120,
+    CLAW_CLOSED = 280,
 
     BACK_UP = 200,
     BACK_DOWN = 1450
 };
 
 enum Constants {
-    SERVO_DURATION = 1
+    SERVO_DURATION = 2
 };
 
 enum Channel {

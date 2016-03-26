@@ -105,7 +105,7 @@ static void track_tribbles() {
         msleep(20);
     }
     scorpion.create.stop();
-    scorpion.create.backward(4, 100);
+    scorpion.create.backward(2, 100);
 
     printf("DESIRED CHANNEL = %d", desired_channel);
 
@@ -115,11 +115,11 @@ static void track_tribbles() {
         scorpion.camera.update();
 
         int x = scorpion.camera.get_object_center_x(desired_channel, 0);
-        if (x >= 0 && x <= 74) { // left
+        if (x >= 0 && x <= 73) { // left
             scorpion.create.spin_counterclockwise(40);
-        } else if(x >= 86 && x <= 159) {
+        } else if(x >= 88 && x <= 159) {
             scorpion.create.spin_clockwise(40);
-        } else if(x >= 75 && x <= 86) {
+        } else if(x >= 74 && x <= 87) {
              break;
         }
         msleep(5);
