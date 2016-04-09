@@ -59,6 +59,40 @@ static void backward(float dist, int speed) {
     create.block();
 }
 
+static void forward_with_speed(float dist, int left_speed, int right_speed) {
+    // Make sure parameters are valid
+    if(left_speed < -500 || right_speed > 500 || right_speed < -500 || right_speed > 500)
+        return;
+
+    // t = d / r
+    float travel_time = (dist * 10) / (float)((left_speed + right_speed) / 2); // speed is in mm/sec
+    create.drive_direct(left_speed, right_speed);
+    msleep(travel_time * 1000.); // convert to milliseconds
+
+    create.block();
+}
+
+static void backward_with_speed(float dist, int left_speed, int right_speed) {
+    // Make sure parameters are valid
+    if(left_speed < -500 || right_speed > 500 || right_speed < -500 || right_speed > 500)
+        return;
+
+    // t = d / r
+    float travel_time = (dist * 10) / (float)((left_speed + right_speed) / 2); // speed is in mm/sec
+    create.drive_direct(-left_speed, -right_speed);
+    msleep(travel_time * 1000.); // convert to milliseconds
+
+    create.block();
+}
+
+static void forward_until_bump(int speed) {
+    create.drive_direct(speed, speed);
+    while(create.get_lbump() == 0 || create.get_rbump() == 0) {
+        msleep(10);
+    }
+    create.stop();
+}
+
 static void left(int angle, float radius, int speed) {
     if(radius < 0.)
         return;
@@ -84,7 +118,6 @@ static void left(int angle, float radius, int speed) {
     }
 
     while(create.get_total_angle() < angle) {
-        msleep(25);
         printf("%d\n", create.get_total_angle());
     }
 
@@ -114,9 +147,8 @@ static void right(int angle, float radius, int speed) {
         create.write_int(-radiusTicks);
     }
 
-    do {
-        msleep(5);
-    } while(create.get_total_angle() >= -angle);
+    while(create.get_total_angle() >= -angle) {
+    }
 
     create.block();
 }
@@ -143,9 +175,14 @@ Create new_create() {
         // Assign method references
         .forward = &forward,
         .backward = &backward,
+        .forward_with_speed = &forward_with_speed,
+        .backward_with_speed = &backward_with_speed,
+        .forward_until_bump = &forward_until_bump,
         .left = &left,
         .right = &right,
         .drive_direct = &create_drive_direct,
+        .spin_clockwise = &create_spin_CW,
+        .spin_counterclockwise = &create_spin_CCW,
         .stop = &create_stop,
         .get_distance = &get_create_distance,
         .set_distance = &set_create_distance,

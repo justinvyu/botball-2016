@@ -8,17 +8,31 @@
 
 // custom subroutines
 
-static void shake() {
-    scorpion.set_arm_to_position(ARM_PARTIAL);
+static void init() {
+    scorpion.create.connect();
+    scorpion.camera.open();
+
+    scorpion.controller.enable_servos();
+    scorpion.controller.servo(BACK_SERVO, BACK_UP);
+    scorpion.set_claw_to_position(CLAW_PARTIAL);
+    scorpion.set_arm_to_position(ARM_UP);
+}
+
+static void deinit() {
+    scorpion.camera.close();
+    scorpion.create.disconnect();
+}
+
+static void shake_arm() {
+    scorpion.controller.servo(ARM_SERVO, 0);
+    msleep(250);
     int i;
     for(i = 0; i < 3; i++) {
-        scorpion.controller.servo(BACK_SERVO, BACK_UP + 150);
+        scorpion.controller.servo(ARM_SERVO, ARM_UP);
         msleep(200);
-        scorpion.controller.servo(BACK_SERVO, BACK_UP);
+        scorpion.controller.servo(ARM_SERVO, 0);
         msleep(200);
-    }
-    scorpion.raise_arm();
-}
+    }}
 
 static void lower_arm() {
     scorpion.controller.slow_servo(ARM_SERVO, ARM_DOWN, SERVO_DURATION);
@@ -76,7 +90,7 @@ static void grab_tribbles() {
     scorpion.close_claw_slow(1.2);
 }
 
-static void track_tribbles() {
+static enum Channel get_tribble_color() {
     scorpion.camera.update();
     scorpion.camera.update();
 
@@ -105,33 +119,47 @@ static void track_tribbles() {
         msleep(20);
     }
     scorpion.create.stop();
-    scorpion.create.backward(2, 100);
 
-    printf("DESIRED CHANNEL = %d", desired_channel);
+    return desired_channel;
+}
+
+static enum Channel track_tribbles() {
+    enum Channel desired_channel = scorpion.get_tribble_color();
+
+    printf("DESIRED CHANNEL = %d\n", desired_channel);
 
     while(1) {
         scorpion.camera.update();
-        scorpion.camera.update();
-        scorpion.camera.update();
 
         int x = scorpion.camera.get_object_center_x(desired_channel, 0);
-        if (x >= 0 && x <= 73) { // left
+        if(x >= 0 && x <= 72) { // left
             scorpion.create.spin_counterclockwise(40);
-        } else if(x >= 88 && x <= 159) {
+        } else if(x >= 89 && x <= 159) {
             scorpion.create.spin_clockwise(40);
-        } else if(x >= 74 && x <= 87) {
+        } else if(x >= 73 && x <= 88) { // center range
              break;
         }
         msleep(5);
+
+        if(scorpion.create.get_lbump() == 1) {
+             scorpion.create.right(1, 0, 150);
+             break;
+        }
+        if(scorpion.create.get_rbump() == 1) {
+             scorpion.create.left(1, 0, 150);
+             break;
+        }
     }
-    create.stop();
+    scorpion.create.stop();
+
+    return desired_channel;
 }
 
 Scorpion new_scorpion() {
 	Scorpion instance = {
         // Assign instance properties
         .grab_tribbles = &grab_tribbles,
-        .shake = &shake,
+        .shake_arm = &shake_arm,
         .lower_arm = &lower_arm,
         .raise_arm = &raise_arm,
         .open_claw = &open_claw,
@@ -143,7 +171,10 @@ Scorpion new_scorpion() {
         .drop_basket = &drop_basket,
         .lift_basket_slow = &lift_basket_slow,
         .drop_basket_slow = &drop_basket_slow,
-        .track = &track_tribbles
+        .track = &track_tribbles,
+        .get_tribble_color = &get_tribble_color,
+        .init = &init,
+        .deinit = &deinit
     };
     instance.create = new_create();
     instance.controller = new_create_controller();

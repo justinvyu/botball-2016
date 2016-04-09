@@ -12,8 +12,14 @@ typedef struct Create {
     void (*left)(int angle, float radius, int speed);
     void (*right)(int angle, float radius, int speed);
 
+    void (*spin_clockwise)(int speed);
+    void (*spin_counterclockwise)(int speed);
     void (*drive_direct)(int l_speed, int r_speed);
     void (*stop)();
+
+    void (*forward_until_bump)(int speed);
+    void (*forward_with_speed)(float dist, int left_speed, int right_speed);
+    void (*backward_with_speed)(float dist, int left_speed, int right_speed);
 
     // sensors
     int (*get_distance)();
