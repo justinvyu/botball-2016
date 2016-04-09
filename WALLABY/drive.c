@@ -1,3 +1,4 @@
+
 //
 //  drive.c
 //  Source written by Justin Yu
@@ -5,7 +6,6 @@
 
 #include "drive.h"
 #include <math.h>
-
 void drive_off() {
 	off(MOT_RIGHT);
 	off(MOT_LEFT);
@@ -19,12 +19,39 @@ void drive(int mL,int mR){
 	motor(MOT_RIGHT,mR);
 }
 
+
 long CMtoBEMF(float cm) {
  	return (long)(cm * 1100. / (PI * wheeldiameter));
 }
 
 float BEMFtoCM(long ticks) {
  	return (float)(ticks * (PI * wheeldiameter) / 1100.);
+}
+
+void slow_servo(int port, int position, float time) {
+    float increment = .01;
+	float curr, start = get_servo_position(port);
+	float i = ((position - start) / time) * increment;
+	curr = start;
+	if (start > position)
+	{
+		while(curr > position)
+		{
+			set_servo_position(port, curr);
+			curr += i;
+			msleep((long)(increment * 1000));
+		}
+	}
+	else if (start < position)
+	{
+		while(curr < position)
+		{
+			set_servo_position(port, curr);
+			curr += i;
+			msleep((long)(increment * 1000));
+		}
+	}
+	set_servo_position(port, position);
 }
 
 /* \fn void right(int degrees, int radius)
@@ -34,8 +61,9 @@ float BEMFtoCM(long ticks) {
  */
 void right(float degrees, float radius){
 		int turnrspeed;
-		long turnl=((2*radius+ks)*CMtoBEMF*PI)*(degrees/360.);
-		long turnr=((2*radius-ks)*CMtoBEMF*PI)*(degrees/360.);
+		long turnl=CMtoBEMF((2*radius+ks)*PI)*(degrees/360.);
+		long turnr=-CMtoBEMF((2*radius-ks)*PI)*(degrees/360.);
+        printf("turnl: %li, turnr: %li\n", turnl, turnr);
     	if(turnl == 0l) return;
     	turnrspeed = round((float)turnr/(float)turnl*SPD);
     	msleep(30l);
@@ -84,10 +112,11 @@ void right(float degrees, float radius){
  * \param degrees degrees forward to go
  * \param radius radius at which to turn around
  */
+
 void left(float degrees, float radius) {
-int turnlspeed;
-	long turnl=((2*radius-ks)*CMtoBEMF*PI)*(degrees/360.);
-	long turnr=((2*radius+ks)*CMtoBEMF*PI)*(degrees/360.);
+    int turnlspeed;
+	long turnl=((2*radius-ks)*CONVERSION*PI)*(degrees/360.);
+	long turnr=((2*radius+ks)*CONVERSION*PI)*(degrees/360.);
     if(turnr == 0l)
 		return;
     turnlspeed = round((float)turnl / (float)turnr*SPD);
