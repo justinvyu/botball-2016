@@ -30,6 +30,8 @@ typedef struct Create {
 
     int (*get_lbump)();
     int (*get_rbump)();
+    int (*get_lclightbump)(); // left-center bump
+    int (*get_rclightbump)(); // right-center bump
 
     // OI
     void (*write_byte)(char byte);

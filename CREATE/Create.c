@@ -87,7 +87,8 @@ static void backward_with_speed(float dist, int left_speed, int right_speed) {
 
 static void forward_until_bump(int speed) {
     create.drive_direct(speed, speed);
-    while(create.get_lbump() == 0 || create.get_rbump() == 0) {
+    while(create.get_lbump() == 0 && create.get_rbump() == 0
+          && create.get_lclightbump() == 0 && create.get_rclightbump() == 0) {
         msleep(10);
     }
     create.stop();
@@ -190,6 +191,8 @@ Create new_create() {
         .set_total_angle = &set_create_total_angle,
         .get_lbump = &get_create_lbump,
         .get_rbump = &get_create_rbump,
+        .get_lclightbump = &get_create_lclightbump,
+        .get_rclightbump = &get_create_rclightbump,
         .write_byte = &create_write_byte,
         .write_int = &create_write_int,
         .block = &block,

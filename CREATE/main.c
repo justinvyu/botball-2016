@@ -7,59 +7,59 @@ int main()
     scorpion = new_scorpion();
     scorpion.init();
 
-    scorpion.create.forward(112, 300);
-    scorpion.create.right(90, 0, 150);
-    scorpion.create.backward(20, 120);
-    scorpion.create.forward(5, 150);
-    scorpion.create.left(90, 0, 150);
+    shut_down_in(119);
 
-    scorpion.open_claw();
+    scorpion.create.forward(92, 300);
+    scorpion.create.right(90, 0, 250);
+    scorpion.create.backward(20, 120);
+    scorpion.create.forward(6, 200);
+    scorpion.create.left(91, 0, 200);
+
+    scorpion.set_claw_to_position(CLAW_OPEN - 350);
     scorpion.lower_arm();
 
     // Get the first tribble pile
 
-    scorpion.create.forward(20, 150);
-    scorpion.grab_tribbles();
+    scorpion.create.forward(44, 280);
+    scorpion.grab_tribbles_slow();
     scorpion.set_arm_to_position(ARM_PARTIAL);
+    scorpion.create.forward(12, 250);
 
     scorpion.create.right(90, 0, 150);
-    scorpion.create.backward(15, 120);
-    scorpion.create.forward(6, 120);
-    scorpion.create.right(95, 0, 150);
+    scorpion.create.backward(18, 150);
+    scorpion.create.forward(6, 150);
+    scorpion.create.right(92, 0, 150);
 
     scorpion.controller.servo(BACK_SERVO, BACK_DOWN);
     msleep(500);
 
     // scorpion.create.backward_with_speed(39, 200, 212);
-    scorpion.create.backward(35, 150);
-    scorpion.create.backward(10, 100);
+    scorpion.create.backward(15, 300);
+    scorpion.create.backward(8, 150);
     scorpion.create.forward(10, 100);
-    msleep(1000);
     scorpion.create.backward(10, 100);
 
-    msleep(500);
     scorpion.create.right(10, 0, 100);
     scorpion.create.left(6, 0, 50);
     scorpion.create.backward(4, 100);
 
-    msleep(500);
     scorpion.lift_basket_slow();
-    msleep(500);
 
-    scorpion.create.forward(10, 120);
+    scorpion.create.forward(8, 150);
     scorpion.create.right(1, 0, 150);
-    scorpion.create.backward(30, 120);
-
-    scorpion.raise_arm();
-    scorpion.open_claw();
+    scorpion.create.backward(35, 150);
 
     // Get second tribble pile
 
-    scorpion.create.forward(15, 150);
-    scorpion.create.left(8, 0, 100);
-    scorpion.create.forward(33, 200);
+    scorpion.create.forward(15, 200);
+    scorpion.create.left(8, 0, 150);
+    scorpion.create.forward(24, 300);
 
+    scorpion.raise_arm();
+    scorpion.open_claw();
     scorpion.lower_arm();
+    scorpion.set_arm_to_position(1890);
+
     scorpion.create.forward(22, 150);
     scorpion.grab_tribbles();
 
@@ -70,9 +70,8 @@ int main()
 
     // Get third tribble pile
 
-    scorpion.create.left(145, 0, 150);
+    scorpion.create.left(162, 0, 250);
     scorpion.create.backward(10, 150);
-    msleep(1000);
 
     scorpion.lower_arm();
 
@@ -83,7 +82,7 @@ int main()
 
     scorpion.create.backward(20, 200);
     scorpion.raise_arm();
-    scorpion.open_claw();
+    scorpion.set_claw_to_position(CLAW_PARTIAL);
 
     // check if there are tribbles remaining - TODO
 
@@ -91,54 +90,70 @@ int main()
 
     // squaring robot
 
-    scorpion.create.right(65, 0, 150);
+    scorpion.create.right(90, 0, 150);
     scorpion.create.backward(30, 200);
     scorpion.create.forward(12, 150);
-    scorpion.create.left(91, 0, 150);
-    scorpion.create.forward_until_bump(250);
-    scorpion.create.backward(5, 120);
+    scorpion.create.right(92, 0, 150);
+    scorpion.create.backward(70, 300);
+    scorpion.create.backward(20, 150);
 
     // squaring in corner
 
-    scorpion.create.right(90, 0, 150);
-    scorpion.create.backward(20, 120);
-    scorpion.create.forward(10, 150);
-    scorpion.create.right(90, 0, 150);
-    scorpion.create.backward(15, 150);
-    scorpion.create.forward(5, 150);
-    scorpion.create.left(92, 0, 150);
-    scorpion.create.forward(18, 150);
+    scorpion.create.forward(11, 150);
+    scorpion.create.left(93, 0, 150);
+    scorpion.create.forward(18, 300);
 
     // grabbing 4th pile
 
     scorpion.open_claw();
     scorpion.lower_arm();
-    scorpion.create.forward(10, 150);
-    scorpion.grab_tribbles();
+    scorpion.grab_tribbles_slow();
+
+    scorpion.set_arm_to_position(ARM_PARTIAL);
+    scorpion.create.forward(45, 250);
     scorpion.raise_arm();
-    scorpion.open_claw();
-    scorpion.set_claw_to_position(CLAW_OPEN - 250);
+    scorpion.set_claw_to_position(CLAW_PARTIAL);
+    scorpion.set_arm_to_position(ARM_PARTIAL);
+    scorpion.create.backward(20, 250);
+    scorpion.lower_arm();
+
+    // scorpion.raise_arm();
+    // scorpion.open_claw();
 
     // scorpion.create.forward_until_bump(250);
 
-    scorpion.lower_arm();
-    scorpion.create.forward(25, 150);
     scorpion.grab_tribbles();
+    scorpion.set_arm_to_position(ARM_PARTIAL);
+
+    scorpion.create.forward(26, 300);
+    scorpion.create.right(90, 0, 150);
+    scorpion.create.backward(25, 150);
     scorpion.raise_arm();
     scorpion.open_claw();
 
-    scorpion.create.forward_until_bump(250);
-    scorpion.create.backward(10, 150);
-    scorpion.create.right(90, 0, 250);
-    scorpion.create.backward(15, 150);
-
+    scorpion.lower_arm();
     scorpion.create.forward(40, 250);
+    scorpion.set_claw_to_position(CLAW_CLOSED);
+    scorpion.set_arm_to_position(ARM_PARTIAL);
+    scorpion.create.left(90, 0, 150);
+    scorpion.set_arm_to_position(ARM_DOWN - 300);
+    scorpion.set_claw_to_position(CLAW_PARTIAL);
+    scorpion.set_arm_to_position(ARM_PARTIAL);
+    scorpion.create.right(90, 0, 150);
     scorpion.lower_arm();
-    scorpion.create.forward(10, 150);
-    scorpion.grab_tribbles();
+    scorpion.grab_tribbles_slow();
     scorpion.raise_arm();
     scorpion.open_claw();
-    scorpion.shake_arm();
+
+    scorpion.create.backward(55, 350);
+    scorpion.create.backward(15, 120);
+    scorpion.create.forward(10, 250);
+    scorpion.create.right(92, 0, 150);
+    scorpion.create.forward(120, 350);
+    scorpion.create.left(92, 0, 150);
+    scorpion.create.backward(20, 150);
+    scorpion.create.forward(250, 350);
+    scorpion.drop_basket_slow();
 
     scorpion.deinit();
   	return 0;
