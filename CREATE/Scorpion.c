@@ -35,21 +35,23 @@ static void shake_arm() {
     }}
 
 static void lower_arm() {
-    scorpion.controller.slow_servo(ARM_SERVO, ARM_DOWN, SERVO_DURATION);
+    scorpion.controller.slow_servo(ARM_SERVO, ARM_DOWN, 0.5);
 }
 
 static void raise_arm() {
-    scorpion.controller.slow_servo(ARM_SERVO, ARM_UP, SERVO_DURATION);
+    scorpion.controller.servo(ARM_SERVO, ARM_UP);
+    msleep(700);
+    // scorpion.controller.slow_servo(ARM_SERVO, ARM_UP, SERVO_DURATION);
 }
 
 static void open_claw() {
     scorpion.controller.servo(CLAW_SERVO, CLAW_OPEN);
-    msleep(500);
+    msleep(200);
 }
 
 static void close_claw() {
     scorpion.controller.servo(CLAW_SERVO, CLAW_CLOSED);
-    msleep(500);
+    msleep(200);
 }
 
 static void close_claw_slow(float time) {
@@ -58,22 +60,22 @@ static void close_claw_slow(float time) {
 
 static void set_claw_to_position(int position) {
     scorpion.controller.servo(CLAW_SERVO, position);
-    msleep(500);
+    msleep(250);
 }
 
 static void set_arm_to_position(int position) {
     scorpion.controller.servo(ARM_SERVO, position);
-    msleep(500);
+    msleep(250);
 }
 
 static void lift_basket() {
     scorpion.controller.servo(BACK_SERVO, BACK_UP);
-    msleep(500);
+    msleep(250);
 }
 
 static void drop_basket() {
     scorpion.controller.servo(BACK_SERVO, BACK_DOWN);
-    msleep(500);
+    msleep(250);
 }
 
 static void lift_basket_slow() {
@@ -84,10 +86,29 @@ static void drop_basket_slow() {
     scorpion.controller.slow_servo(BACK_SERVO, BACK_DOWN, SERVO_DURATION);
 }
 
-static void grab_tribbles() {
-    scorpion.controller.slow_servo(CLAW_SERVO, CLAW_PARTIAL, 0.8);
-    scorpion.create.forward(12, 100);
+void _close_claw_slow() {
     scorpion.close_claw_slow(1.2);
+}
+
+static void grab_tribbles() {
+    scorpion.controller.slow_servo(CLAW_SERVO, CLAW_PARTIAL, 0.6);
+    scorpion.grab_tribbles_async();
+}
+
+static void grab_tribbles_async() {
+    thread tid = thread_create(_close_claw_slow);
+    thread_start(tid);
+    scorpion.create.forward(12, 100);
+    thread_wait(tid);
+    thread_destroy(tid);
+}
+
+static void grab_tribbles_slow() {
+    scorpion.controller.slow_servo(CLAW_SERVO, CLAW_PARTIAL, 0.4);
+    scorpion.set_claw_to_position(CLAW_OPEN - 300);
+    scorpion.create.forward(8, 100);
+    scorpion.controller.slow_servo(CLAW_SERVO, CLAW_PARTIAL, 0.4);
+    scorpion.grab_tribbles_async();
 }
 
 static enum Channel get_tribble_color() {
@@ -155,10 +176,37 @@ static enum Channel track_tribbles() {
     return desired_channel;
 }
 
+void determine_action(int *red, int *green) {
+    enum Channel channel = get_tribble_color();
+
+    if((*red) < 0) (*red) = 0;
+    if(channel == RED_CHANNEL)
+        (*red)++;
+    else if(channel == GREEN_CHANNEL)
+        (*green)++;
+    int total_collected = (*red) + (*green);
+    if(((*green) == 0 || (*green) == 1)) { // (no 2 green)
+        if(total_collected == 2 || total_collected == 3 || total_collected == 4) // 2nd, 3rd, 4th piles
+            scorpion.grab_tribbles();
+        else if(total_collected == 1)
+            scorpion.grab_tribbles_slow();
+    }
+    else if(channel == GREEN_CHANNEL && (*green) == 2)
+        scorpion.isolate_tribbles();
+}
+
+static void isolate_tribbles() {
+
+}
+
 Scorpion new_scorpion() {
 	Scorpion instance = {
         // Assign instance properties
         .grab_tribbles = &grab_tribbles,
+        .grab_tribbles_slow = &grab_tribbles_slow,
+        .grab_tribbles_async = &grab_tribbles_async,
+        .determine_action = &determine_action,
+        .isolate_tribbles = &isolate_tribbles,
         .shake_arm = &shake_arm,
         .lower_arm = &lower_arm,
         .raise_arm = &raise_arm,

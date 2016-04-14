@@ -10,16 +10,16 @@
 
 enum ServoPositions {
     ARM_SERVO = 0,
-    CLAW_SERVO = 3,
-    BACK_SERVO = 1,
+    CLAW_SERVO = 1,
+    BACK_SERVO = 2,
 
     ARM_UP = 100,
     ARM_PARTIAL = 1000,
-    ARM_DOWN = 2198,
+    ARM_DOWN = 2000,
 
-    CLAW_OPEN = 1950,
-    CLAW_PARTIAL = 1250,
-    CLAW_CLOSED = 280,
+    CLAW_OPEN = 1850,
+    CLAW_PARTIAL = 1000,
+    CLAW_CLOSED = 0,
 
     BACK_UP = 600,
     BACK_DOWN = 2047
@@ -40,9 +40,14 @@ typedef struct Scorpion {
 
     // Custom properties/instance methods
     void (*grab_tribbles)();
+    void (*grab_tribbles_slow)();
+    void (*grab_tribbles_async)();
     void (*shake_arm)();
     enum Channel (*track)();
     enum Channel (*get_tribble_color)();
+
+    void (*determine_action)(int *red, int *green);
+    void (*isolate_tribbles)();
 
     void (*init)();
     void (*deinit)();
