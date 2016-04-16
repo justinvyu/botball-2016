@@ -13,7 +13,7 @@ enum ServoPositions {
     CLAW_SERVO = 1,
     BACK_SERVO = 2,
 
-    ARM_UP = 100,
+    ARM_UP = 200,
     ARM_PARTIAL = 1000,
     ARM_DOWN = 2000,
 
@@ -23,6 +23,11 @@ enum ServoPositions {
 
     BACK_UP = 600,
     BACK_DOWN = 2047
+};
+
+enum Sensor {
+    LIGHT_SENSOR = 0,
+    CALIB_TOUCH_SENSOR = 0
 };
 
 #define SERVO_DURATION 1.2

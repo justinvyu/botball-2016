@@ -118,9 +118,7 @@ static void left(int angle, float radius, int speed) {
         create.write_int(radiusTicks);
     }
 
-    while(create.get_total_angle() < angle) {
-        printf("%d\n", create.get_total_angle());
-    }
+    while(create.get_total_angle() < angle);
 
     create.block();
 }
@@ -148,8 +146,7 @@ static void right(int angle, float radius, int speed) {
         create.write_int(-radiusTicks);
     }
 
-    while(create.get_total_angle() >= -angle) {
-    }
+    while(create.get_total_angle() >= -angle);
 
     create.block();
 }

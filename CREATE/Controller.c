@@ -204,6 +204,14 @@ static int set_motor_right(int port) {
     return 1;
 }
 
+static int get_left_button() {
+     return digital(12); // left button is port 12 (supposedly)
+}
+
+static int get_right_button() {
+     return digital(13); // right button is port 13
+}
+
 // Constructors
 
 Controller new_controller(int motor_left, int motor_right, float distance_between_wheels, float wheel_diameter) {
@@ -270,9 +278,13 @@ Controller new_create_controller() {
         .servo = &set_servo_position,
         .slow_servo = &slow_servo,
         .digital = &digital,
+        .left_button = &get_left_button,
+        .right_button = &get_right_button,
         .analog = &analog,
         .analog10 = &analog10,
-        .analog_et = &analog_et
+        .analog_et = &analog_et,
+        .shut_down_in = &shut_down_in,
+        .light_start = &wait_for_light
     };
     controller = instance;
     return instance;

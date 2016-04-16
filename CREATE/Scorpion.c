@@ -19,6 +19,7 @@ static void init() {
 }
 
 static void deinit() {
+    scorpion.controller.disable_servos();
     scorpion.camera.close();
     scorpion.create.disconnect();
 }
@@ -101,6 +102,8 @@ static void grab_tribbles_async() {
     scorpion.create.forward(12, 100);
     thread_wait(tid);
     thread_destroy(tid);
+    scorpion.set_claw_to_position(CLAW_PARTIAL);
+    scorpion.close_claw_slow(0.6);
 }
 
 static void grab_tribbles_slow() {
@@ -176,10 +179,13 @@ static enum Channel track_tribbles() {
     return desired_channel;
 }
 
-void determine_action(int *red, int *green) {
+static void determine_action(int *red, int *green) {
+    scorpion.create.backward(10, 200);
+
     enum Channel channel = get_tribble_color();
 
-    if((*red) < 0) (*red) = 0;
+    scorpion.create.forward(10, 200);
+
     if(channel == RED_CHANNEL)
         (*red)++;
     else if(channel == GREEN_CHANNEL)
@@ -191,12 +197,38 @@ void determine_action(int *red, int *green) {
         else if(total_collected == 1)
             scorpion.grab_tribbles_slow();
     }
+    else if(channel == RED_CHANNEL)
+        scorpion.grab_tribbles();
     else if(channel == GREEN_CHANNEL && (*green) == 2)
         scorpion.isolate_tribbles();
+
 }
 
 static void isolate_tribbles() {
+    scorpion.controller.slow_servo(CLAW_SERVO, CLAW_PARTIAL, 0.4);
+    scorpion.create.forward(8, 150);
+    scorpion.close_claw();
 
+    int i;
+    for(i = 0; i < 6; i++) {
+        scorpion.controller.slow_servo(CLAW_SERVO, CLAW_PARTIAL, 0.2);
+        scorpion.close_claw();
+    }
+
+    scorpion.set_claw_to_position(400);
+    scorpion.create.backward(6, 150);
+    scorpion.create.forward(6, 150);
+    scorpion.close_claw();
+    scorpion.controller.slow_servo(CLAW_SERVO, CLAW_PARTIAL, 0.2);
+    scorpion.create.backward(5, 120);
+    scorpion.close_claw();
+    scorpion.controller.slow_servo(CLAW_SERVO, CLAW_PARTIAL, 0.2);
+    scorpion.close_claw();
+    scorpion.controller.slow_servo(CLAW_SERVO, CLAW_PARTIAL, 0.2);
+    scorpion.create.backward(7, 120);
+    scorpion.close_claw();
+    scorpion.create.forward(4, 120);
+    scorpion.create.backward(4, 120);
 }
 
 Scorpion new_scorpion() {

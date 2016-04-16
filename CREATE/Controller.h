@@ -150,6 +150,9 @@ typedef struct Controller {
      */
     int (*digital)(int port);
 
+    int (*left_button)();
+    int (*right_button)();
+
     // ANALOG SENSORS
 
     /**
@@ -172,6 +175,9 @@ typedef struct Controller {
      * @return      the 8-bit analog value of the et sensor (a range of 0-255)
      */
     int (*analog_et)(int port);
+
+    void (*light_start)(int light_port);
+    void (*shut_down_in)(double s);
 
     // PROPERTY SETTERS
 
