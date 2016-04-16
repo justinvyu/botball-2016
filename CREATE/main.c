@@ -23,7 +23,7 @@ void seeding() {
     scorpion.create.forward(6, 200);
     scorpion.create.left(91, 0, 200);
 
-    scorpion.set_claw_to_position(CLAW_OPEN - 350);
+    scorpion.set_claw_to_position(CLAW_OPEN - 500);
     scorpion.lower_arm();
 
     // Get the first tribble pile
@@ -110,7 +110,7 @@ void seeding() {
 
     scorpion.create.forward(7, 150);
     scorpion.create.left(93, 0, 150);
-    scorpion.create.forward(18, 300);
+    scorpion.create.forward(12, 300);
     scorpion.open_claw();
     scorpion.lower_arm();
     scorpion.create.forward(10, 250);
@@ -127,7 +127,7 @@ void seeding() {
 
     // grabbing 5th pile
 
-    scorpion.create.backward(30, 250);
+    scorpion.create.backward(26, 250);
     scorpion.lower_arm();
     scorpion.set_arm_to_position(1870);
     scorpion.grab_tribbles_slow();
@@ -137,11 +137,11 @@ void seeding() {
 
     // squaring in the center of the field
 
-    scorpion.create.forward(18, 250);
+    scorpion.create.forward(26, 250);
     scorpion.create.right(90, 0, 150);
     scorpion.create.backward(20, 200);
     scorpion.raise_arm();
-    scorpion.set_claw_to_position(CLAW_PARTIAL + 200);
+    scorpion.set_claw_to_position(CLAW_PARTIAL + 300);
 
     // move block (red/green) out of the way
 
@@ -171,15 +171,15 @@ void seeding() {
     scorpion.create.backward(15, 200);
     scorpion.create.forward(12, 300);
     scorpion.create.right(87, 0, 250);
-    scorpion.create.forward(110, 350);
-    scorpion.create.forward(5, 150);
+    scorpion.create.forward(88, 350);
+    scorpion.create.forward(25, 150);
     scorpion.create.left(92, 0, 150);
-    scorpion.create.backward(15, 150);
- 	scorpion.create.forward_with_speed(180, 300, 297);
+    scorpion.create.backward(20, 150);
+ 	scorpion.create.forward_with_speed(180, 300, 296);
 
     // score!
 
-    scorpion.lower_arm();
+    scorpion.set_arm_to_position(ARM_PARTIAL);
     scorpion.drop_basket_slow();
 }
 
@@ -213,7 +213,7 @@ void double_elimination() {
 
     // Get the first tribble pile
 
-    scorpion.set_claw_to_position(CLAW_OPEN - 350);
+    scorpion.set_claw_to_position(CLAW_OPEN - 500);
     scorpion.create.forward(30, 280);
 
     scorpion.determine_action(&red_count, &green_count);
@@ -338,12 +338,11 @@ int main() {
     scorpion = new_scorpion();
     scorpion.init();
 
-    enum GameType game_type = DOUBLE_ELIM;
+    enum GameType game_type = SEEDING;
 
-    // scorpion.controller.light_start(0);
-
+    scorpion.controller.light_start(0);
     scorpion.controller.shut_down_in(119);
-    
+
   /*
     scorpion.lower_arm();
     scorpion.grab_tribbles();
