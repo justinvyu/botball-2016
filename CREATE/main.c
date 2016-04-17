@@ -13,9 +13,10 @@ enum GameType {
 
 
 void seeding() {
+    scorpion.create.write_byte(132);
     scorpion.create.backward(15, 120);
 
-    msleep(5000); // wait for wallaby
+    msleep(4500); // wait for wallaby
 
     scorpion.create.forward(80, 300);
     scorpion.create.right(90, 0, 250);
@@ -137,7 +138,7 @@ void seeding() {
 
     // squaring in the center of the field
 
-    scorpion.create.forward(26, 250);
+    scorpion.create.forward(22, 200);
     scorpion.create.right(90, 0, 150);
     scorpion.create.backward(20, 200);
     scorpion.raise_arm();
@@ -190,6 +191,7 @@ void seeding() {
 
 void double_elimination() {
 
+    scorpion.create.write_byte(132);
     scorpion.create.backward(15, 120);
 
     msleep(4000);
@@ -206,7 +208,7 @@ void double_elimination() {
     scorpion.create.right(90, 0, 250);
     scorpion.create.backward(20, 120);
     scorpion.create.forward(6, 200);
-    scorpion.create.left(91, 0, 200);
+    scorpion.create.left(92, 0, 200);
 
     scorpion.create.forward(40, 250);
     scorpion.lower_arm();
@@ -256,7 +258,7 @@ void double_elimination() {
     scorpion.raise_arm();
     scorpion.set_claw_to_position(CLAW_OPEN - 200);
 
-    scorpion.create.forward(25, 150);
+    scorpion.create.forward(16, 150);
     scorpion.lower_arm();
 
     scorpion.determine_action(&red_count, &green_count);
@@ -283,13 +285,13 @@ void double_elimination() {
     printf("red_count: %d, green_count: %d\n\n", red_count, green_count);
 
     scorpion.create.right(10, 0, 200);
-    scorpion.raise_arm();
-    scorpion.set_claw_to_position(CLAW_PARTIAL);
 
     // squaring robot
 
     scorpion.create.right(70, 0, 250);
     scorpion.create.backward(40, 200);
+    scorpion.raise_arm();
+    scorpion.set_claw_to_position(CLAW_PARTIAL);
     scorpion.create.forward(12, 150);
     scorpion.create.right(92, 0, 150);
     scorpion.create.backward(60, 300);
@@ -308,6 +310,7 @@ void double_elimination() {
     scorpion.create.forward(10, 250);
     scorpion.grab_tribbles();
     scorpion.create.right(90, 0, 200);
+    scorpion.set_claw_to_position(CLAW_PARTIAL);
 
     scorpion.determine_action(&red_count, &green_count);
     printf("red_count: %d, green_count: %d\n\n", red_count, green_count);
@@ -319,7 +322,7 @@ void double_elimination() {
     scorpion.create.left(90, 0, 200);
 
     scorpion.create.backward(45, 350);
-    scorpion.create.left(3, 0, 150);
+    scorpion.create.left(2, 0, 150);
     scorpion.create.backward(20, 120);
     scorpion.create.forward(10, 250);
     scorpion.create.right(90, 0, 250);
@@ -338,7 +341,7 @@ int main() {
     scorpion = new_scorpion();
     scorpion.init();
 
-    enum GameType game_type = SEEDING;
+    enum GameType game_type = DOUBLE_ELIM;
 
     scorpion.controller.light_start(0);
     scorpion.controller.shut_down_in(119);
